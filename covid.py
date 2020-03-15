@@ -51,27 +51,37 @@ class Covid:
         plt.bar(x,y)
         plt.show()
 
-    def scatterplot(self):
-        x = numpy.array([i for i in range(40,len(self.us_data.values()))])
-        y = numpy.array(list(self.us_data.values())[40:])
+    def scatterplot(self,start,end,days_out):
+        if start < 0 or end > len(self.us_data.values()):
+            print("INVALID START/END")
+            return
+        x = numpy.array([i-start for i in range(start,end)])
+        
+        y = numpy.array(list(self.us_data.values())[start:end])
         #plt.xticks(list(self.us_data.keys()), rotation='vertical')
         plt.scatter(x,y)
         print(x)
         print(y)
         model, model_cov = curve_fit(exp_func,x,y)
         
+        mar13_model = [0.01187034, 0.29641059]
+
         print(f"Coefficients: {model}")
         print(f"Model Covariance: {model_cov}")
         def gen_model(x):
-            return model[0]*math.exp(model[1]*x)
+            return model[0]*numpy.exp(model[1]*x)
 
         y = numpy.array([gen_model(i) for i in x])
 
         plt.plot(x,y)
-        
-        start_num = len(self.us_data.values())
-        num_days_out = 25
-        x = numpy.array([i for i in range(start_num,start_num+num_days_out)])
+
+        def gen_old_model(x):
+            return mar13_model[0]*numpy.exp(mar13_model[1]*x)
+        y = numpy.array([gen_old_model(i) for i in x])
+        plt.plot(x,y)
+        start_num = end
+        num_days_out = days_out
+        x = numpy.array([i-start for i in range(start_num,start_num+num_days_out)])
         y = numpy.array([gen_model(t) for t in x])
         print(y)
         plt.scatter(x,y)
@@ -94,4 +104,4 @@ class Covid:
 if __name__ == "__main__":
     c = Covid()
     c.display()
-    c.scatterplot()
+    c.scatterplot(10,53,5)
