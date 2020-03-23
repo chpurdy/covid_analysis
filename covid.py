@@ -179,5 +179,5 @@ class Covid:
 if __name__ == "__main__":
     c = Covid()
     c.display()
-    c.predict_confirmed(30,58,14)
+    c.predict_confirmed(30,59,14)
     #c.scatterplot(30,58,7)
