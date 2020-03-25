@@ -11,7 +11,7 @@ def exp_func(x, a, b):
 
 class Covid:
     def __init__(self):
-        with open('time_series_19-covid-Confirmed.csv') as f:
+        with open('time_series_covid19_confirmed_global.csv') as f:
             data = csv.reader(f)
             headers = next(data)
             self.us_data = {}
@@ -105,7 +105,25 @@ class Covid:
         # plt.scatter(x,y)
 
 
-       
+    def change_over_prev(self):
+        dates = list(self.us_data.keys())
+        nums = list(self.us_data.values())
+
+        for i in range(1,len(nums)):
+            if nums[i] == 0:
+                continue
+            diff_from_prev = nums[i] - nums[i-1]
+            
+            if diff_from_prev > 0:
+                arrow = "▲"
+            elif diff_from_prev < 0:
+                arrow = "▼"
+            else:
+                arrow = ""
+            if nums[i-1] > 0:
+                print(f"{dates[i]}: {nums[i]} ({arrow}{abs(diff_from_prev)})({abs(diff_from_prev)/nums[i-1]*100:.2f}%)")
+            else:
+                print(f"{dates[i]}: {nums[i]} ({arrow}{abs(diff_from_prev)})")
 
 
     def scatterplot(self,start,end,days_out):
@@ -179,5 +197,6 @@ class Covid:
 if __name__ == "__main__":
     c = Covid()
     c.display()
-    c.predict_confirmed(30,59,14)
+    c.predict_confirmed(30,62,14)
+    c.change_over_prev()
     #c.scatterplot(30,58,7)
