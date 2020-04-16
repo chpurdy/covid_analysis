@@ -11,7 +11,7 @@ def exp_func(x, a, b):
 
 class Covid:
     def __init__(self):
-        with open('time_series_covid19_confirmed_global.csv') as f:
+        with open('time_series_covid19_deaths_global.csv') as f:
             data = csv.reader(f)
             headers = next(data)
             self.us_data = {}
@@ -39,8 +39,9 @@ class Covid:
     def daily_inc(self):
         d = [(k,v) for k,v in self.us_data.items()]
         daily = {}
-        for i in range(1,len(d)):
-            daily[d[i][0]] = d[i][1] / d[i-1][1]
+        for i in range(50,len(d)):
+            if d[i-1][1] != 0:
+                daily[d[i][0]] = d[i][1]-d[i-1][1]
         
         return daily
         
@@ -197,6 +198,7 @@ class Covid:
 if __name__ == "__main__":
     c = Covid()
     c.display()
-    c.predict_confirmed(30,62,14)
+    c.predict_confirmed(69,81,14)
     c.change_over_prev()
+    c.daily_inc_graph()
     #c.scatterplot(30,58,7)
